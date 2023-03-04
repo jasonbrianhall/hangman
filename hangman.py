@@ -2,11 +2,11 @@ import random
 import curses
 
 # Load words from the file
-with open('/usr/share/dict/words') as f:
+with open('words') as f:
     words = f.read().splitlines()
 
-# Filter words to include only those with 5-10 letters
-words = [word.lower() for word in words if len(word) >= 5 and len(word) <= 10]
+# Filter words to include only those with 5-25 letters
+words = [word.lower() for word in words if len(word) >= 5 and len(word) <= 25]
 
 # Select a random word from the list
 word = random.choice(words)
@@ -15,7 +15,7 @@ word = random.choice(words)
 progress = ['_'] * len(word)
 guesses = set()
 incorrect_guesses = 0
-max_incorrect_guesses = 10
+max_incorrect_guesses = 12
 
 # Initialize curses
 screen = curses.initscr()
@@ -51,17 +51,17 @@ def draw_hangman():
         screen.addstr(6, 7, '\\')
     if incorrect_guesses>8:
         screen.addstr(7, 4, '/')
-    if incorrect_guesses>8:
-        screen.addstr(7, 8, '\\')
     if incorrect_guesses>9:
-        screen.addstr(8, 3, '/')
+        screen.addstr(7, 8, '\\')
     if incorrect_guesses>10:
+        screen.addstr(8, 3, '/')
+    if incorrect_guesses>11:
         screen.addstr(8, 9, '\\')
 
 
     screen.addstr(11, 0, ' '.join(['Available letters:'] + [l.upper() if l not in guesses else '_' for l in 'abcdefghijklmnopqrstuvwxyz']))
-    screen.addstr(12, 0, ' '.join(progress))
-    screen.addstr(13, 0, f'Wrong guesses left: {max_incorrect_guesses - incorrect_guesses}')
+    screen.addstr(14, 0, ' '.join(progress))
+    screen.addstr(16, 0, f'Wrong guesses left: {max_incorrect_guesses - incorrect_guesses}')
     screen.refresh()
 
 # Play the game
@@ -95,12 +95,13 @@ while play_again:
 
     # End the game
     if '_' not in progress:
-        screen.addstr(12, 0, f'Congratulations! You guessed the word "{word}" with {incorrect_guesses} incorrect guesses.')
+        screen.addstr(16, 0, f'Congratulations! You guessed the word "{word}" with {incorrect_guesses} incorrect guesses.')
     else:
-        screen.addstr(12, 0, f'Sorry, you lost. The word was "{word}".')
-    screen.addstr(13, 0, 'Do you want to play again? (y/n)')
+        screen.addstr(16, 0, f'Sorry, you lost. The word was "{word}".')
+    screen.addstr(18, 0, 'Do you want to play again? (y/n)')
     play_again_input = ''
     while play_again_input not in ['y', 'n']:
         play_again_input = screen.getkey().lower()
     play_again = play_again_input == 'y'
+curses.endwin()
 
