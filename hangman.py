@@ -3,9 +3,11 @@
 import random
 import curses
 import traceback
+import sys
 
 # Define the hangman drawing function
 def draw_hangman(screen, incorrect_guesses, max_incorrect_guesses, guesses, progress):
+    temp=max_incorrect_guesses/12
     screen.clear()
     screen.addstr(0, 0, '_______ ')
     screen.addstr(1, 0, '|     |')
@@ -19,27 +21,27 @@ def draw_hangman(screen, incorrect_guesses, max_incorrect_guesses, guesses, prog
     screen.addstr(9, 0, '-------')
     if incorrect_guesses>0:
         screen.addstr(2, 6, 'O')
-    if incorrect_guesses>1:
+    if incorrect_guesses>temp:
         screen.addstr(3, 6, '|')
-    if incorrect_guesses>2:
+    if incorrect_guesses>2*temp:
         screen.addstr(4, 6, '|')
-    if incorrect_guesses>3:
+    if incorrect_guesses>3*temp:
         screen.addstr(4, 5, '/')
-    if incorrect_guesses>4:
+    if incorrect_guesses>4*temp:
         screen.addstr(4, 7, '\\')
-    if incorrect_guesses>5:
+    if incorrect_guesses>5*temp:
         screen.addstr(5, 6, '|')
-    if incorrect_guesses>6:
+    if incorrect_guesses>6*temp:
         screen.addstr(6, 5, '/')
-    if incorrect_guesses>7:
+    if incorrect_guesses>7*temp:
         screen.addstr(6, 7, '\\')
-    if incorrect_guesses>8:
+    if incorrect_guesses>8*temp:
         screen.addstr(7, 4, '/')
-    if incorrect_guesses>9:
+    if incorrect_guesses>9*temp:
         screen.addstr(7, 8, '\\')
-    if incorrect_guesses>10:
+    if incorrect_guesses>10*temp:
         screen.addstr(8, 3, '/')
-    if incorrect_guesses>11:
+    if incorrect_guesses>11*temp:
         screen.addstr(8, 9, '\\')
 
 
@@ -48,7 +50,7 @@ def draw_hangman(screen, incorrect_guesses, max_incorrect_guesses, guesses, prog
     screen.addstr(16, 0, f'Wrong guesses left: {max_incorrect_guesses - incorrect_guesses}')
     screen.refresh()
 
-def main():
+def main(max_incorrect_guesses=12):
     # Load words from the file
     with open('words') as f:
         words = f.read().splitlines()
@@ -63,7 +65,7 @@ def main():
     progress = ['_'] * len(word)
     guesses = set()
     incorrect_guesses = 0
-    max_incorrect_guesses = 12
+    #max_incorrect_guesses = 12
 
     # Initialize curses
     screen = curses.initscr()
@@ -115,4 +117,13 @@ def main():
     curses.endwin()
 
 if __name__=="__main__":
-    main()
+    max_guesses=12
+    options = {}
+    for i in range(1, len(sys.argv), 2):
+        if sys.argv[i] in ["-m"]:
+            try:
+                max_guesses = int(sys.argv[i+1])
+            except:
+                print("Max guesses is not an integer; exiting")
+                sys.exit(1)
+    main(max_guesses)
