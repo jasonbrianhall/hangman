@@ -4,6 +4,7 @@ import random
 import curses
 import traceback
 import sys
+import re
 
 # Define the hangman drawing function
 def draw_hangman(screen, incorrect_guesses, max_incorrect_guesses, guesses, progress):
@@ -58,18 +59,8 @@ def main(max_incorrect_guesses=12):
     # Filter words to include only those with 5-25 letters
     words = [word.lower() for word in words if len(word) >= 5 and len(word) <= 25]
 
-    # Select a random word from the list
-    word = random.choice(words)
-
-    # Initialize the game state
-    progress = ['_'] * len(word)
-    guesses = set()
-    incorrect_guesses = 0
-    #max_incorrect_guesses = 12
-
     # Initialize curses
     screen = curses.initscr()
-
 
     # Play the game
     play_again = True
@@ -78,6 +69,11 @@ def main(max_incorrect_guesses=12):
             # Reset game state
             word = random.choice(words)
             progress = ['_'] * len(word)
+            counter=0
+            for letter in word:
+                if not re.match("[a-z]", letter):
+                    progress[counter]=letter
+                counter+=1
             guesses = set()
             incorrect_guesses = 0
             draw_hangman(screen, incorrect_guesses, max_incorrect_guesses, guesses, progress)
