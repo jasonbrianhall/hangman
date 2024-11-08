@@ -63,6 +63,10 @@ void draw_hangman(int incorrect_guesses, int max_incorrect_guesses) {
     printf("  |  %c %c\n",
            (incorrect_guesses > 5) ? '/' : ' ',
            (incorrect_guesses > 6) ? '\\' : ' ');
+    printf("  | %c   %c\n",
+           (incorrect_guesses > 7) ? '/' : ' ',
+           (incorrect_guesses > 8) ? '\\' : ' ');
+
     printf("  |\n");
     printf("=====\n\n");
 }
