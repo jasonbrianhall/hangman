@@ -127,7 +127,8 @@ void clear_screen(void) {
     #elif defined(__DJGPP__) || defined(__MSDOS__)
         clrscr();
     #else
-        system("clear");
+       clear();
+       refresh();
     #endif
 }
 // Function to draw the hangman
