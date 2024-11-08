@@ -52,20 +52,29 @@ void clear_screen(void) {
 void draw_hangman(int incorrect_guesses, int max_incorrect_guesses) {
     int temp = max_incorrect_guesses / 12;
     
-    printf("  +---+\n");
-    printf("  |   |\n");
-    printf("  |   %c\n", (incorrect_guesses > 0) ? 'O' : ' ');
-    printf("  |  %c%c%c\n",
-           (incorrect_guesses > 3) ? '/' : ' ',
-           (incorrect_guesses > 1) ? '|' : ' ',
-           (incorrect_guesses > 4) ? '\\' : ' ');
-    printf("  |   %c\n", (incorrect_guesses > 2) ? '|' : ' ');
-    printf("  |  %c %c\n",
-           (incorrect_guesses > 5) ? '/' : ' ',
-           (incorrect_guesses > 6) ? '\\' : ' ');
-    printf("  | %c   %c\n",
-           (incorrect_guesses > 7) ? '/' : ' ',
-           (incorrect_guesses > 8) ? '\\' : ' ');
+    printf("  +-----+\n");
+    printf("  |     |\n");
+    printf("  |     %c\n", (incorrect_guesses > 0) ? 'O' : ' ');
+    printf("  |    %c%c%c\n",
+           (incorrect_guesses > 3 || incorrect_guesses >= max_incorrect_guesses) ? '/' : ' ',
+           (incorrect_guesses > 1 || incorrect_guesses >= max_incorrect_guesses) ? '|' : ' ',
+           (incorrect_guesses > 4 || incorrect_guesses >= max_incorrect_guesses) ? '\\' : ' ');
+    printf("  |     %c\n", (incorrect_guesses > 2 || incorrect_guesses >= max_incorrect_guesses) ? '|' : ' ');
+    printf("  |    %c %c\n",
+           (incorrect_guesses > 5 || incorrect_guesses >= max_incorrect_guesses) ? '/' : ' ',
+           (incorrect_guesses > 6 || incorrect_guesses >= max_incorrect_guesses) ? '\\' : ' ');
+    printf("  |   %c   %c\n",
+           (incorrect_guesses > 7 || incorrect_guesses >= max_incorrect_guesses) ? '/' : ' ',
+           (incorrect_guesses > 8 || incorrect_guesses >= max_incorrect_guesses) ? '\\' : ' ');
+    printf("  |  %c     %c\n",
+           (incorrect_guesses > 9 || incorrect_guesses >= max_incorrect_guesses) ? '/' : ' ',
+           (incorrect_guesses > 10 || incorrect_guesses >= max_incorrect_guesses) ? '\\' : ' ');
+    printf("  | %c       %c\n",
+           (incorrect_guesses > 11 || incorrect_guesses >= max_incorrect_guesses) ? '/' : ' ',
+           (incorrect_guesses > 12 || incorrect_guesses >= max_incorrect_guesses) ? '\\' : ' ');
+    printf("  |%c         %c\n",
+           (incorrect_guesses > 13 || incorrect_guesses >= max_incorrect_guesses) ? '/' : ' ',
+           (incorrect_guesses >= max_incorrect_guesses) ? '\\' : ' ');
 
     printf("  |\n");
     printf("=====\n\n");
