@@ -54,7 +54,6 @@ git clone https://github.com/jasonbrianhall/hangman
 
 # Navigate to the directory
 cd hangman/python
-cp ../words .
 
 # Run with default settings
 python hangman.py
