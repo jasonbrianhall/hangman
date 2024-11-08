@@ -3,6 +3,7 @@
 #include <string.h>
 #include <ctype.h>
 #include <time.h>
+#include <stdarg.h>
 #ifdef MSDOS
 #include <conio.h>
 #include <dos.h>
@@ -16,6 +17,16 @@
 #define SCREEN_WIDTH 80
 #define SCREEN_HEIGHT 25
 
+void print_message(const char *format, ...) {
+  va_list args;
+  va_start(args, format);
+  vprintf(format, args);
+  va_end(args);
+}
+
+
+
+
 // Global variables
 char words[MAX_WORDS][MAX_WORD_LENGTH + 1];
 int num_words = 0;
@@ -27,7 +38,7 @@ int load_words(void) {
     
     fp = fopen("WORDS.TXT", "r");
     if(fp == NULL) {
-        printf("Error: Cannot open WORDS.TXT\n");
+        print_message("Error: Cannot open WORDS.TXT\n");
         return 0;
     }
     
@@ -53,6 +64,7 @@ void clear_screen(void) {
     clrscr();
     #else
     clear();
+    refresh();
     #endif
 }
 
@@ -60,46 +72,46 @@ void clear_screen(void) {
 void draw_hangman(int incorrect_guesses, int max_incorrect_guesses) {
     int temp = max_incorrect_guesses / 12;
     
-    printf("  +-----+\n");
-    printf("  |     |\n");
-    printf("  |     %c\n", (incorrect_guesses > 0) ? 'O' : ' ');
-    printf("  |    %c%c%c\n",
+    print_message("  +-----+\n");
+    print_message("  |     |\n");
+    print_message("  |     %c\n", (incorrect_guesses > 0) ? 'O' : ' ');
+    print_message("  |    %c%c%c\n",
            (incorrect_guesses > 3 || incorrect_guesses >= max_incorrect_guesses) ? '/' : ' ',
            (incorrect_guesses > 1 || incorrect_guesses >= max_incorrect_guesses) ? '|' : ' ',
            (incorrect_guesses > 4 || incorrect_guesses >= max_incorrect_guesses) ? '\\' : ' ');
-    printf("  |     %c\n", (incorrect_guesses > 2 || incorrect_guesses >= max_incorrect_guesses) ? '|' : ' ');
-    printf("  |    %c %c\n",
+    print_message("  |     %c\n", (incorrect_guesses > 2 || incorrect_guesses >= max_incorrect_guesses) ? '|' : ' ');
+    print_message("  |    %c %c\n",
            (incorrect_guesses > 5 || incorrect_guesses >= max_incorrect_guesses) ? '/' : ' ',
            (incorrect_guesses > 6 || incorrect_guesses >= max_incorrect_guesses) ? '\\' : ' ');
-    printf("  |   %c   %c\n",
+    print_message("  |   %c   %c\n",
            (incorrect_guesses > 7 || incorrect_guesses >= max_incorrect_guesses) ? '/' : ' ',
            (incorrect_guesses > 8 || incorrect_guesses >= max_incorrect_guesses) ? '\\' : ' ');
-    printf("  |  %c     %c\n",
+    print_message("  |  %c     %c\n",
            (incorrect_guesses > 9 || incorrect_guesses >= max_incorrect_guesses) ? '/' : ' ',
            (incorrect_guesses > 10 || incorrect_guesses >= max_incorrect_guesses) ? '\\' : ' ');
-    printf("  | %c       %c\n",
+    print_message("  | %c       %c\n",
            (incorrect_guesses > 11 || incorrect_guesses >= max_incorrect_guesses) ? '/' : ' ',
            (incorrect_guesses > 12 || incorrect_guesses >= max_incorrect_guesses) ? '\\' : ' ');
-    printf("  |%c         %c\n",
+    print_message("  |%c         %c\n",
            (incorrect_guesses > 13 || incorrect_guesses >= max_incorrect_guesses) ? '/' : ' ',
            (incorrect_guesses >= max_incorrect_guesses) ? '\\' : ' ');
 
-    printf("  |\n");
-    printf("=====\n\n");
+    print_message("  |\n");
+    print_message("=====\n\n");
 }
 
 // Function to display available letters
 void display_available_letters(const char *guessed) {
     int i;
-    printf("\nAvailable letters: ");
+    print_message("\nAvailable letters: ");
     for(i = 0; i < 26; i++) {
         if(!guessed[i]) {
-            printf("%c ", 'A' + i);
+            print_message("%c ", 'A' + i);
         } else {
-            printf("_ ");
+            print_message("_ ");
         }
     }
-    printf("\n");
+    print_message("\n");
 }
 
 // Main game function
@@ -131,17 +143,17 @@ void play_game(int max_incorrect_guesses) {
         draw_hangman(incorrect_guesses, max_incorrect_guesses);
         
         // Display word progress
-        printf("\nWord: ");
+        print_message("\nWord: ");
         for(i = 0; i < word_len; i++) {
-            printf("%c ", progress[i]);
+            print_message("%c ", progress[i]);
         }
-        printf("\n");
+        print_message("\n");
         
-        printf("\nWrong guesses left: %d", max_incorrect_guesses - incorrect_guesses);
+        print_message("\nWrong guesses left: %d", max_incorrect_guesses - incorrect_guesses);
         
         display_available_letters(guessed);
         
-        printf("\nEnter your guess (ESC to quit): ");
+        print_message("\nEnter your guess (ESC to quit): ");
         guess = toupper(getch());
         
         if(guess == 27) { // ESC key
@@ -154,7 +166,7 @@ void play_game(int max_incorrect_guesses) {
         }
         
         if(guessed[guess - 'A']) {
-            printf("\nYou've already guessed that letter!");
+            print_message("\nYou've already guessed that letter!");
             getch();
             continue;
         }
@@ -176,17 +188,17 @@ void play_game(int max_incorrect_guesses) {
         if(strchr(progress, '_') == NULL) {
             clear_screen();
             draw_hangman(incorrect_guesses, max_incorrect_guesses);
-            printf("\nCongratulations! You guessed the word \"%s\"!", word);
+            print_message("\nCongratulations! You guessed the word \"%s\"!", word);
             game_over = 1;
         } else if(incorrect_guesses >= max_incorrect_guesses) {
             clear_screen();
             draw_hangman(incorrect_guesses, max_incorrect_guesses);
-            printf("\nSorry, you lost. The word was \"%s\".", word);
+            print_message("\nSorry, you lost. The word was \"%s\".", word);
             game_over = 1;
         }
     }
     
-    printf("\n\nPress any key to continue...");
+    print_message("\n\nPress any key to continue...");
     getch();
 }
 
@@ -198,7 +210,7 @@ int main(int argc, char *argv[]) {
     if(argc == 3 && strcmp(argv[1], "-m") == 0) {
         max_guesses = atoi(argv[2]);
         if(max_guesses <= 0) {
-            printf("Invalid number of guesses\n");
+            print_message("Invalid number of guesses\n");
             return 1;
         }
     }
@@ -208,7 +220,7 @@ int main(int argc, char *argv[]) {
     
     // Load words
     if(!load_words()) {
-        printf("Failed to load words\n");
+        print_message("Failed to load words\n");
         return 1;
     }
     
@@ -216,7 +228,7 @@ int main(int argc, char *argv[]) {
     do {
         play_game(max_guesses);
         
-        printf("\nPlay again? (Y/N): ");
+        print_message("\nPlay again? (Y/N): ");
         do {
             play_again = toupper(getch());
         } while(play_again != 'Y' && play_again != 'N');
