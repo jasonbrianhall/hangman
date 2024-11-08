@@ -1,7 +1,7 @@
 # 🎮 Ultimate Terminal Hangman Game
 
 [![Python](https://img.shields.io/badge/Python-3.6%2B-blue.svg)](https://www.python.org/)
-[![License](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE.md)
 [![Platform](https://img.shields.io/badge/Platform-Linux%20%7C%20macOS%20%7C%20Windows-lightgrey.svg)](https://github.com/yourusername/terminal-hangman)
 
 A blazing-fast, ASCII-art powered Hangman game that runs right in your terminal! This isn't your grandmother's Hangman - it's a modernized, Python-powered version with smooth animations and dynamic gameplay.
@@ -97,7 +97,7 @@ Contributions are welcome! Feel free to:
 
 ## 📝 License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
 
 ## 🌟 Why This Game?
 
