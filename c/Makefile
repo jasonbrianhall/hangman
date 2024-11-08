@@ -26,7 +26,7 @@ USER_ID = $(shell id -u)
 GROUP_ID = $(shell id -g)
 
 # Default target
-all: msdos unix
+all: unix msdos windows
 
 # Clean target to remove generated files
 clean:
