@@ -118,7 +118,7 @@ hangman_windows.exe or wine hangman_windows.exe if on Linux
 
 ### MS-DOS Version
 For building:
-- Docker (for DJGPP compilation environment)
+- Docker (for DJGPP compilation environment; if you have DJGPP locally, you can use that; I find docker easier)
 - Make
 - Internet connection (first build only)
 
@@ -128,14 +128,14 @@ For running:
 - 286 or better CPU
 - 640K RAM (memory efficient but slow words file)
 
-### MS-DOS Version
+### MS-Windows Version
 For building:
-- Docker (for mingw compilation environment)
+- Docker (for mingw compilation environment; if you have mingw locally, you can use that; I find docker easier)
 - Make
 - Internet connection (first build only)
 
 For running:
-- Windows
+- Windows or wine
 
 ### UNIX Version
 For building:
