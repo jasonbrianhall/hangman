@@ -13,7 +13,7 @@
 
 #define MAX_WORD_LENGTH 25
 #define MIN_WORD_LENGTH 5
-#define MAX_WORDS 500000
+#define MAX_WORDS 5000000
 #define SCREEN_WIDTH 80
 #define SCREEN_HEIGHT 25
 
@@ -33,11 +33,67 @@ void print_message(const char *format, ...) {
 char words[MAX_WORDS][MAX_WORD_LENGTH + 1];
 int num_words = 0;
 
-// Function to load words from file
+// Function to load words from file  (MSDOS is memory efficient but slow)
 int load_words(void) {
     FILE *fp;
     char word[MAX_WORD_LENGTH + 1];
+    char selected_word[MAX_WORD_LENGTH + 1];
+    long file_position;
+    int valid_words = 0;
+    int selected_index;
     
+    #ifdef MSDOS
+    // Initialize random seed
+    srand((unsigned)time(NULL));
+    
+    // First pass: count valid words
+    fp = fopen("WORDS.TXT", "r");
+    if(fp == NULL) {
+        print_message("Error: Cannot open WORDS.TXT\n");
+        return 0;
+    }
+    
+    while(fgets(word, MAX_WORD_LENGTH + 1, fp) != NULL) {
+        // Remove newline and carriage return
+        word[strcspn(word, "\n")] = 0;
+        word[strcspn(word, "\r")] = 0;
+        
+        if(strlen(word) >= MIN_WORD_LENGTH && strlen(word) <= MAX_WORD_LENGTH) {
+            valid_words++;
+        }
+    }
+    
+    if(valid_words == 0) {
+        fclose(fp);
+        return 0;
+    }
+    
+    // Pick a random valid word index
+    selected_index = rand() % valid_words;
+    
+    // Second pass: get the selected word
+    rewind(fp);
+    valid_words = 0;
+    
+    while(fgets(word, MAX_WORD_LENGTH + 1, fp) != NULL) {
+        word[strcspn(word, "\n")] = 0;
+        word[strcspn(word, "\r")] = 0;
+        
+        if(strlen(word) >= MIN_WORD_LENGTH && strlen(word) <= MAX_WORD_LENGTH) {
+            if(valid_words == selected_index) {
+                strcpy(words[0], word);
+                num_words = 1;
+                break;
+            }
+            valid_words++;
+        }
+    }
+    
+    fclose(fp);
+    return num_words;
+    
+    #else
+    // Original implementation for non-MSDOS systems
     fp = fopen("WORDS.TXT", "r");
     if(fp == NULL) {
         print_message("Error: Cannot open WORDS.TXT\n");
@@ -45,11 +101,9 @@ int load_words(void) {
     }
     
     while(fgets(word, MAX_WORD_LENGTH + 1, fp) != NULL && num_words < MAX_WORDS) {
-        // Remove newline and carriage return
         word[strcspn(word, "\n")] = 0;
         word[strcspn(word, "\r")] = 0;
         
-        // Check word length
         if(strlen(word) >= MIN_WORD_LENGTH && strlen(word) <= MAX_WORD_LENGTH) {
             strcpy(words[num_words], word);
             num_words++;
@@ -58,6 +112,7 @@ int load_words(void) {
     
     fclose(fp);
     return num_words;
+    #endif
 }
 
 // Function to clear screen
@@ -230,13 +285,24 @@ int main(int argc, char *argv[]) {
     srand(time(NULL));
     
     // Load words
+    #ifndef MSDOS
     total_words = load_words();
     if(total_words == 0) {
         print_message("Failed to load words\n");
+        endwin();           // End curses mode
         return 1;
     }
+    #endif
     // Main game loop
     do {
+        #ifdef MSDOS
+        total_words = load_words();
+        if(total_words == 0) {
+            print_message("Failed to load words\n");
+            return 1;
+        }
+        #endif
+
         play_game(max_guesses);
         
         print_message("\nPlay again? (Y/N): ");
