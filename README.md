@@ -9,7 +9,7 @@ A blazing-fast, ASCII-art powered Hangman game available in both Python and MS-D
 
 ## 🖥️ Available Versions
 
-### Python Version (root directory)
+### Python Version (python/ directory)
 - Modern terminal-based implementation
 - Dynamic ASCII art
 - Cross-platform compatibility
