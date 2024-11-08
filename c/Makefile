@@ -7,11 +7,16 @@ SRCS = hangman.c
 # Output executable and required files
 DOS_TARGET = hangman.exe
 UNIX_TARGET = hangman
+WINDOWS_TARGET = hangman_windows.exe
 WORDS_FILE = ../words
 DOS_WORDS = WORDS.TXT
 
 # Docker image for DJGPP
 DJGPP_IMAGE = djfdyuruiry/djgpp
+MINGW_IMAGE = mdashnet/mingw  # MinGW for Windows
+
+# Windows compiler (MinGW)
+MINGW_CC = x86_64-w64-mingw32-gcc
 
 # Correct CSDPMI URL
 CSDPMI_URL = http://na.mirror.garr.it/mirrors/djgpp/current/v2misc/csdpmi7b.zip
@@ -31,6 +36,13 @@ clean:
 	rm *.EXE || true
 	rm *.zip || true
 	rm $(DOS_WORDS) || true
+
+pull-mingw:
+	docker pull $(MINGW_IMAGE)
+
+windows: pull-mingw get-words
+	docker run --rm -v $(PWD):/src:z -u $(USER_ID):$(GROUP_ID) $(MINGW_IMAGE) /bin/sh -c "cd /src && $(MINGW_CC) $(SRCS) -o $(WINDOWS_TARGET)"
+
 
 # Target to pull the DJGPP Docker image
 pull-djgpp:

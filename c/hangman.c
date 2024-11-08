@@ -4,6 +4,11 @@
 #include <ctype.h>
 #include <time.h>
 #include <stdarg.h>
+#ifdef WIN32
+#include <windows.h>
+#define MSDOS
+#endif
+
 #ifdef MSDOS
 #include <conio.h>
 #include <dos.h>
@@ -117,14 +122,14 @@ int load_words(void) {
 
 // Function to clear screen
 void clear_screen(void) {
-    #ifdef MSDOS
-    clrscr();
+    #ifdef _WIN32
+        system("cls");
+    #elif defined(__DJGPP__) || defined(__MSDOS__)
+        clrscr();
     #else
-    clear();
-    refresh();
+        system("clear");
     #endif
 }
-
 // Function to draw the hangman
 void draw_hangman(int incorrect_guesses, int max_incorrect_guesses) {
     int temp = max_incorrect_guesses / 12;
