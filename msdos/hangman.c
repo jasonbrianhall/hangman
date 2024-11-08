@@ -3,8 +3,12 @@
 #include <string.h>
 #include <ctype.h>
 #include <time.h>
+#ifdef MSDOS
 #include <conio.h>
 #include <dos.h>
+#else
+#include <curses.h>
+#endif
 
 #define MAX_WORD_LENGTH 25
 #define MIN_WORD_LENGTH 5
@@ -45,7 +49,11 @@ int load_words(void) {
 
 // Function to clear screen
 void clear_screen(void) {
+    #ifdef MSDOS
     clrscr();
+    #else
+    clear();
+    #endif
 }
 
 // Function to draw the hangman
