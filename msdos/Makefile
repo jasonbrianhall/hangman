@@ -8,7 +8,7 @@ SRCS = hangman.c
 DOS_TARGET = hangman.exe
 UNIX_TARGET = hangman
 WORDS_FILE = ../words
-DOS_WORDS = words
+DOS_WORDS = WORDS.TXT
 
 # Docker image for DJGPP
 DJGPP_IMAGE = djfdyuruiry/djgpp
@@ -50,8 +50,10 @@ get-words:
 msdos: pull-djgpp get-csdpmi get-words
 	docker run --rm -v $(PWD):/src:z -u $(USER_ID):$(GROUP_ID) $(DJGPP_IMAGE) /bin/sh -c "cd /src && gcc $(SRCS) -o $(DOS_TARGET)"
 	cp csdpmi/bin/CWSDPMI.EXE .
+	rm *.zip.* *.zip -f
 
-unix: gcc hangman.c -lcurses -o $(UNIX_TARGET)
+unix: get-words 
+	gcc hangman.c -lcurses -o $(UNIX_TARGET)
 
 # Target to run the MS-DOS executable using DOSBox
 run: msdos
