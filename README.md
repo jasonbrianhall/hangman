@@ -53,7 +53,8 @@ A blazing-fast, ASCII-art powered Hangman game available in both Python and MS-D
 git clone https://github.com/jasonbrianhall/hangman
 
 # Navigate to the directory
-cd hangman
+cd hangman/python
+cp ../words .
 
 # Run with default settings
 python hangman.py
