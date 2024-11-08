@@ -17,7 +17,7 @@ A blazing-fast, ASCII-art powered Hangman game available in both Python and MS-D
 
 ### MS-DOS Version (c/ directory)
 - Authentic DOS gaming experience
-- DJGPP C implementation
+- DJGPP C implementation using conio.h
 - Compatible with DOSBox and real DOS systems
 - Optimized for vintage hardware
 - Classic ASCII interface
@@ -27,6 +27,13 @@ A blazing-fast, ASCII-art powered Hangman game available in both Python and MS-D
 - C implementation using NCurses
 - Compatible with most UNIXes
 - Optimized for vintage hardware
+- Classic ASCII interface
+
+### Windows Version (c/ directory)
+- Authentic CLI gaming experience
+- C implementation using conio.h
+- Compatible with Windows
+- Optimized for modern hardware
 - Classic ASCII interface
 
 ## ✨ Features
@@ -57,7 +64,7 @@ python hangman.py -m 8
 
 ### MS-DOS Version
 ```bash
-# Navigate to the MS-DOS directory
+# Navigate to the c directory
 cd hangman/c
 
 # Build using DJGPP (via Docker)
@@ -67,12 +74,12 @@ make msdos
 make run
 
 # Or run directly in DOS
-hangman.exe
+hangman.exe (requires cwsdpmi.exe which is downloaded during the build)
 ```
 
 ### UNIX Version
 ```bash
-# Navigate to the MS-DOS directory
+# Navigate to the c directory
 cd hangman/c
 
 # Build using gcc
@@ -80,6 +87,18 @@ make unix
 
 # Run in the CLI
 ./hangman
+```
+
+### UNIX Version
+```bash
+# Navigate to the c directory
+cd hangman/c
+
+# Build using gcc
+make windows
+
+# Run in the CLI
+hangman_windows.exe or wine hangman_windows.exe if on Linux
 ```
 
 ## 🎯 Gameplay
@@ -109,6 +128,15 @@ For running:
 - 286 or better CPU
 - 640K RAM (memory efficient but slow words file)
 
+### MS-DOS Version
+For building:
+- Docker (for mingw compilation environment)
+- Make
+- Internet connection (first build only)
+
+For running:
+- Windows
+
 ### UNIX Version
 For building:
 - gcc
@@ -137,6 +165,12 @@ python hangman.py -m <number_of_guesses>
 
 # DOS version
 hangman.exe -m <number_of_guesses>
+
+# UNIX version
+./hangman -m <number_of_guesses>
+
+# windows version
+hangman_windows.exe -m <number_of_guesses>
 ```
 
 ## 🤝 Contributing
@@ -164,7 +198,7 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 
 ## 🔍 Keywords
 
-hangman, python game, terminal game, dos game, unix game, ascii art, curses, command-line game, educational game, vocabulary game, python curses, terminal ui, cli game, text-based game, programming example, learning tool, msdos, djgpp
+hangman, python game, terminal game, dos game, windows cli game, unix game, ascii art, curses, command-line game, educational game, vocabulary game, python curses, terminal ui, cli game, text-based game, programming example, learning tool, msdos, djgpp
 
 ---
 
