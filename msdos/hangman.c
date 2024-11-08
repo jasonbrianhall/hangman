@@ -18,10 +18,15 @@
 #define SCREEN_HEIGHT 25
 
 void print_message(const char *format, ...) {
-  va_list args;
-  va_start(args, format);
-  vprintf(format, args);
-  va_end(args);
+    va_list args;
+    va_start(args, format);
+    #ifdef MSDOS
+    vprintf(format, args);
+    #else
+    vw_printw(stdscr, format, args);
+    refresh();
+    #endif
+    va_end(args);
 }
 
 
@@ -215,6 +220,13 @@ int main(int argc, char *argv[]) {
         }
     }
     
+    #ifndef MSDOS
+    initscr();          // Start curses mode
+    cbreak();           // Line buffering disabled
+    //noecho();           // Don't echo keystrokes
+    keypad(stdscr, TRUE);  // Enable keypad (for arrow keys etc)
+    #endif
+    
     // Initialize random number generator
     srand(time(NULL));
     
@@ -236,5 +248,8 @@ int main(int argc, char *argv[]) {
     } while(play_again == 'Y');
     
     clear_screen();
+    #ifndef MSDOS
+    endwin();           // End curses mode
+    #endif
     return 0;
 }
