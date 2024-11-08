@@ -16,100 +16,21 @@
 char words[MAX_WORDS][MAX_WORD_LENGTH + 1];
 int num_words = 0;
 
-// Function to clear the screen
-void clear_screen(void) {
-    clrscr();
-}
-
-// Function to draw the hangman
-void draw_hangman(int incorrect_guesses, int max_incorrect_guesses) {
-    int temp = max_incorrect_guesses / 12;
-    
-    gotoxy(1, 1);
-    printf("_______");
-    gotoxy(1, 2);
-    printf("|     |");
-    gotoxy(1, 3);
-    printf("|");
-    gotoxy(1, 4);
-    printf("|");
-    gotoxy(1, 5);
-    printf("|");
-    gotoxy(1, 6);
-    printf("|");
-    gotoxy(1, 7);
-    printf("|");
-    gotoxy(1, 8);
-    printf("|");
-    gotoxy(1, 9);
-    printf("|");
-    gotoxy(1, 10);
-    printf("-------");
-
-    if(incorrect_guesses > 0) {
-        gotoxy(7, 3);
-        printf("O");
-    }
-    if(incorrect_guesses > temp) {
-        gotoxy(7, 4);
-        printf("|");
-    }
-    if(incorrect_guesses > 2 * temp) {
-        gotoxy(7, 5);
-        printf("|");
-    }
-    if(incorrect_guesses > 3 * temp) {
-        gotoxy(6, 5);
-        printf("/");
-    }
-    if(incorrect_guesses > 4 * temp) {
-        gotoxy(8, 5);
-        printf("\\");
-    }
-    if(incorrect_guesses > 5 * temp) {
-        gotoxy(7, 6);
-        printf("|");
-    }
-    if(incorrect_guesses > 6 * temp) {
-        gotoxy(6, 7);
-        printf("/");
-    }
-    if(incorrect_guesses > 7 * temp) {
-        gotoxy(8, 7);
-        printf("\\");
-    }
-    if(incorrect_guesses > 8 * temp) {
-        gotoxy(5, 8);
-        printf("/");
-    }
-    if(incorrect_guesses > 9 * temp) {
-        gotoxy(9, 8);
-        printf("\\");
-    }
-    if(incorrect_guesses > 10 * temp) {
-        gotoxy(4, 9);
-        printf("/");
-    }
-    if(incorrect_guesses > 11 * temp) {
-        gotoxy(10, 9);
-        printf("\\");
-    }
-}
-
 // Function to load words from file
 int load_words(void) {
     FILE *fp;
     char word[MAX_WORD_LENGTH + 1];
     
-    fp = fopen("WORDS", "r");
+    fp = fopen("WORDS.TXT", "r");
     if(fp == NULL) {
-        printf("Error: Cannot open words file\n");
+        printf("Error: Cannot open WORDS.TXT\n");
         return 0;
     }
     
     while(fgets(word, MAX_WORD_LENGTH + 1, fp) != NULL && num_words < MAX_WORDS) {
-        // Remove newline
+        // Remove newline and carriage return
         word[strcspn(word, "\n")] = 0;
+        word[strcspn(word, "\r")] = 0;
         
         // Check word length
         if(strlen(word) >= MIN_WORD_LENGTH && strlen(word) <= MAX_WORD_LENGTH) {
@@ -122,11 +43,34 @@ int load_words(void) {
     return num_words > 0;
 }
 
+// Function to clear screen
+void clear_screen(void) {
+    clrscr();
+}
+
+// Function to draw the hangman
+void draw_hangman(int incorrect_guesses, int max_incorrect_guesses) {
+    int temp = max_incorrect_guesses / 12;
+    
+    printf("  +---+\n");
+    printf("  |   |\n");
+    printf("  |   %c\n", (incorrect_guesses > 0) ? 'O' : ' ');
+    printf("  |  %c%c%c\n",
+           (incorrect_guesses > 3) ? '/' : ' ',
+           (incorrect_guesses > 1) ? '|' : ' ',
+           (incorrect_guesses > 4) ? '\\' : ' ');
+    printf("  |   %c\n", (incorrect_guesses > 2) ? '|' : ' ');
+    printf("  |  %c %c\n",
+           (incorrect_guesses > 5) ? '/' : ' ',
+           (incorrect_guesses > 6) ? '\\' : ' ');
+    printf("  |\n");
+    printf("=====\n\n");
+}
+
 // Function to display available letters
-void display_available_letters(char *guessed) {
+void display_available_letters(const char *guessed) {
     int i;
-    gotoxy(1, 12);
-    printf("Available letters: ");
+    printf("\nAvailable letters: ");
     for(i = 0; i < 26; i++) {
         if(!guessed[i]) {
             printf("%c ", 'A' + i);
@@ -134,6 +78,7 @@ void display_available_letters(char *guessed) {
             printf("_ ");
         }
     }
+    printf("\n");
 }
 
 // Main game function
@@ -163,20 +108,19 @@ void play_game(int max_incorrect_guesses) {
     while(!game_over) {
         clear_screen();
         draw_hangman(incorrect_guesses, max_incorrect_guesses);
-        display_available_letters(guessed);
         
-        gotoxy(1, 15);
-        printf("Word: ");
+        // Display word progress
+        printf("\nWord: ");
         for(i = 0; i < word_len; i++) {
             printf("%c ", progress[i]);
         }
+        printf("\n");
         
-        gotoxy(1, 17);
-        printf("Wrong guesses left: %d", max_incorrect_guesses - incorrect_guesses);
+        printf("\nWrong guesses left: %d", max_incorrect_guesses - incorrect_guesses);
         
-        // Get guess
-        gotoxy(1, 19);
-        printf("Enter your guess (or ESC to quit): ");
+        display_available_letters(guessed);
+        
+        printf("\nEnter your guess (ESC to quit): ");
         guess = toupper(getch());
         
         if(guess == 27) { // ESC key
@@ -188,17 +132,14 @@ void play_game(int max_incorrect_guesses) {
             continue;
         }
         
-        // Check if letter was already guessed
         if(guessed[guess - 'A']) {
-            gotoxy(1, 21);
-            printf("You've already guessed that letter!");
+            printf("\nYou've already guessed that letter!");
             getch();
             continue;
         }
         
         guessed[guess - 'A'] = 1;
         
-        // Check guess
         found = 0;
         for(i = 0; i < word_len; i++) {
             if(toupper(word[i]) == guess) {
@@ -211,24 +152,20 @@ void play_game(int max_incorrect_guesses) {
             incorrect_guesses++;
         }
         
-        // Check win/lose conditions
         if(strchr(progress, '_') == NULL) {
             clear_screen();
             draw_hangman(incorrect_guesses, max_incorrect_guesses);
-            gotoxy(1, 17);
-            printf("Congratulations! You guessed the word \"%s\"!", word);
+            printf("\nCongratulations! You guessed the word \"%s\"!", word);
             game_over = 1;
         } else if(incorrect_guesses >= max_incorrect_guesses) {
             clear_screen();
             draw_hangman(incorrect_guesses, max_incorrect_guesses);
-            gotoxy(1, 17);
-            printf("Sorry, you lost. The word was \"%s\".", word);
+            printf("\nSorry, you lost. The word was \"%s\".", word);
             game_over = 1;
         }
     }
     
-    gotoxy(1, 21);
-    printf("Press any key to continue...");
+    printf("\n\nPress any key to continue...");
     getch();
 }
 
@@ -258,8 +195,7 @@ int main(int argc, char *argv[]) {
     do {
         play_game(max_guesses);
         
-        gotoxy(1, 22);
-        printf("Play again? (Y/N): ");
+        printf("\nPlay again? (Y/N): ");
         do {
             play_again = toupper(getch());
         } while(play_again != 'Y' && play_again != 'N');
@@ -269,4 +205,3 @@ int main(int argc, char *argv[]) {
     clear_screen();
     return 0;
 }
-
