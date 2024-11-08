@@ -15,10 +15,17 @@ A blazing-fast, ASCII-art powered Hangman game available in both Python and MS-D
 - Cross-platform compatibility
 - Real-time feedback
 
-### MS-DOS Version (msdos/ directory)
+### MS-DOS Version (c/ directory)
 - Authentic DOS gaming experience
 - DJGPP C implementation
 - Compatible with DOSBox and real DOS systems
+- Optimized for vintage hardware
+- Classic ASCII interface
+
+### UNIX Version (c/ directory)
+- Authentic CLI gaming experience
+- C implementation using NCurses
+- Compatible with most UNIXes
 - Optimized for vintage hardware
 - Classic ASCII interface
 
@@ -51,7 +58,7 @@ python hangman.py -m 8
 ### MS-DOS Version
 ```bash
 # Navigate to the MS-DOS directory
-cd hangman/msdos
+cd hangman/c
 
 # Build using DJGPP (via Docker)
 make msdos
@@ -61,6 +68,18 @@ make run
 
 # Or run directly in DOS
 hangman.exe
+```
+
+### UNIX Version
+```bash
+# Navigate to the MS-DOS directory
+cd hangman/c
+
+# Build using gcc
+make unix
+
+# Run in the CLI
+./hangman
 ```
 
 ## 🎯 Gameplay
@@ -88,7 +107,18 @@ For running:
 - DOSBox or
 - MS-DOS 5.0 or higher
 - 286 or better CPU
-- 640K RAM
+- 640K RAM (memory efficient but slow words file)
+
+### UNIX Version
+For building:
+- gcc
+- Make
+- ncurses-devel library
+
+For running:
+- Unix or Linux
+- 586 or better CPU
+- 6MB RAM (Loads entire Words file into memory)
 
 ## 🎮 Controls
 
