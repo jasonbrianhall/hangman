@@ -164,7 +164,7 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 
 ## 🔍 Keywords
 
-hangman, python game, terminal game, dos game, ascii art, curses, command-line game, educational game, vocabulary game, python curses, terminal ui, cli game, text-based game, programming example, learning tool, msdos, djgpp
+hangman, python game, terminal game, dos game, unix game, ascii art, curses, command-line game, educational game, vocabulary game, python curses, terminal ui, cli game, text-based game, programming example, learning tool, msdos, djgpp
 
 ---
 
