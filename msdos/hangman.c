@@ -13,7 +13,7 @@
 
 #define MAX_WORD_LENGTH 25
 #define MIN_WORD_LENGTH 5
-#define MAX_WORDS 1000
+#define MAX_WORDS 500000
 #define SCREEN_WIDTH 80
 #define SCREEN_HEIGHT 25
 
@@ -28,9 +28,6 @@ void print_message(const char *format, ...) {
     #endif
     va_end(args);
 }
-
-
-
 
 // Global variables
 char words[MAX_WORDS][MAX_WORD_LENGTH + 1];
@@ -60,7 +57,7 @@ int load_words(void) {
     }
     
     fclose(fp);
-    return num_words > 0;
+    return num_words;
 }
 
 // Function to clear screen
@@ -129,8 +126,10 @@ void play_game(int max_incorrect_guesses) {
     char guess;
     int found;
     
-    // Select random word
-    strcpy(word, words[rand() % num_words]);
+    // Select a random index from 0 to num_words-1
+    int random_index = rand() % num_words;
+    // Copy the randomly selected word
+    strcpy(word, words[random_index]);
     word_len = strlen(word);
     
     // Initialize progress
@@ -210,7 +209,7 @@ void play_game(int max_incorrect_guesses) {
 int main(int argc, char *argv[]) {
     int max_guesses = 12;
     char play_again;
-    
+    int total_words;
     // Parse command line arguments
     if(argc == 3 && strcmp(argv[1], "-m") == 0) {
         max_guesses = atoi(argv[2]);
@@ -231,11 +230,11 @@ int main(int argc, char *argv[]) {
     srand(time(NULL));
     
     // Load words
-    if(!load_words()) {
+    total_words = load_words();
+    if(total_words == 0) {
         print_message("Failed to load words\n");
         return 1;
     }
-    
     // Main game loop
     do {
         play_game(max_guesses);
